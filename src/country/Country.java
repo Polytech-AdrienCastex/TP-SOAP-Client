@@ -1,4 +1,4 @@
-package servicecountry;
+package country;
 
 public class Country
 {

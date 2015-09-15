@@ -1,10 +1,12 @@
-package servicecountry;
+package service;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.soap.SOAPException;
+
+import country.Country;
 
 public class ServiceCountry
 {

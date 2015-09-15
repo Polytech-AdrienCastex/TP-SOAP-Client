@@ -1,4 +1,4 @@
-package servicecountry;
+package service;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPConnectionFactory;

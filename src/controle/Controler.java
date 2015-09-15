@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
-import servicecountry.ServiceCountry;
+import service.ServiceCountry;
 
 import java.util.Date;
 

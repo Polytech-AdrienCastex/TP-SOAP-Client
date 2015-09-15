@@ -1,4 +1,4 @@
-package servicecountry;
+package service;
 
 public class WebServiceBuilder<T>
 {
