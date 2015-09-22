@@ -6,6 +6,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,11 +17,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import service.exception.ServiceException;
+
 public abstract class IControler extends HttpServlet
 {
 	private static final String ACTION_TYPE = "action";
 
-	private static final String ERROR_PAGE = "error.jsp";
+	private static final String ERROR_PAGE = "home.jsp";
 	private static final String NOT_FOUND_PAGE = "404.jsp";
 
 	@Target({ ElementType.METHOD })
@@ -71,6 +74,11 @@ public abstract class IControler extends HttpServlet
 
 			if(destinationPage == null)
 				destinationPage = NOT_FOUND_PAGE;
+		}
+		catch(InvocationTargetException ex)
+		{
+			request.setAttribute("error", ex.getTargetException().getMessage());
+			destinationPage = ERROR_PAGE;
 		}
 		catch(Exception ex)
 		{

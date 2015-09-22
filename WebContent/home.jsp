@@ -14,7 +14,6 @@
 		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 	</head>
 	<body>
-	
 		<div class="body">
 			<div class="menu">
 				<div class="selector">
@@ -34,6 +33,17 @@
 					<div><img src="http://www.plantalecara.com/plantalecara.com/admin/uploads/manita%20cursor(1).jpg"></img> Put the cursor here</div>
 				</div>
 			</div>
+			
+			<c:if test="${not empty error}" >
+				<div class="error">
+					<div>
+						<img src="https://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/error.png"></img>
+					</div>
+					<div>
+						${error}
+					</div>
+				</div>
+			</c:if>
 		
 			<div id="map"></div>
 		</div>

@@ -127,3 +127,42 @@ button:hover
 {
 	white-space:nowrap;
 }
+
+.error img
+{
+	width: 20px;
+	height: 20px;
+}
+.error
+{
+	position: absolute;
+	z-index: 2000;
+	right: 0px;
+	top: 10%;
+	
+	font-size: 0px;
+	cursor: default;
+}
+.error > div
+{
+	padding: 10px;
+	font-size: 15px;
+	display: inline-block;
+	color: white;
+	box-sizing: border-box;
+	float: left;
+	height: 44px;
+}
+.error > div:first-child
+{
+	background-color: white;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+.error > div:not(:first-child)
+{
+	background-color: #A00;
+}
+
+
+
