@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import service.exception.ServiceException;
-
 public abstract class IControler extends HttpServlet
 {
 	private static final String ACTION_TYPE = "action";
