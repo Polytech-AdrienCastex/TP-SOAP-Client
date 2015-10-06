@@ -52,7 +52,6 @@ public abstract class IControler extends HttpServlet
 
 	protected void process(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
-		System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx");
 		String actionName = request.getParameter(ACTION_TYPE);
 		String destinationPage = null;
 

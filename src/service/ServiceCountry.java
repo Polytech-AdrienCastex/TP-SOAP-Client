@@ -3,6 +3,7 @@ package service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -68,51 +70,96 @@ public class ServiceCountry
 		return null;
 	}
 	
-	public String[] getCountryList() throws UnsupportedOperationException, SOAPException, ServiceException
+	protected Node seekNode(NodeList list, String nodeLocalName) throws ServiceException
 	{
-		Document countries = parseXML("<countries>" + generateRequest("getListePays")
-				.build()
-				.getInnerBodyString() + "</countries>");
-
-		NodeList errors = countries.getElementsByTagName("error");
+		nodeLocalName = nodeLocalName.toLowerCase();
 		
-		if(errors.getLength() > 0)
-		{ // manage errors
-			throw new ServiceException(errors.item(0));
-		}
-		else
+		for(int i = 0; i < list.getLength(); i++)
 		{
-			NodeList list = countries
-					.getDocumentElement()
-					.getElementsByTagName("country");
-			
-			List<String> data = new LinkedList<>();
-			for(int i = 0; i < list.getLength(); i++)
-				data.add(list.item(i).getTextContent());
-	
-			return data.toArray(new String[data.size()]);
+			Node node = list.item(i);
+			if(nodeLocalName.equals(node.getLocalName().toLowerCase()))
+				return node;
 		}
+
+		throw new ServiceException();
+	}
+	protected Collection<Node> seekNodes(NodeList list, String nodeLocalName)
+	{
+		Collection<Node> nodes = new LinkedList<>();
+		nodeLocalName = nodeLocalName.toLowerCase();
+		
+		for(int i = 0; i < list.getLength(); i++)
+		{
+			Node node = list.item(i);
+			if(nodeLocalName.equals(node.getLocalName().toLowerCase()))
+				nodes.add(node);
+		}
+
+		return nodes;
+	}
+	
+	
+	protected Country castNodeToCountry(Node node) throws ServiceException
+	{
+		NodeList nChildren = node.getChildNodes();
+
+		Node nodeName = seekNode(nChildren, "nom");
+		Node nodeCapital = seekNode(nChildren, "capital");
+		Node nodeNbInhabitants = seekNode(nChildren, "nbHabitants");
+
+		return new Country(
+				nodeName.getTextContent(),
+				nodeCapital.getTextContent(),
+				(int)Double.parseDouble(nodeNbInhabitants.getTextContent()));
+	}
+	
+	public Collection<Country> getCountryList() throws UnsupportedOperationException, SOAPException, ServiceException
+	{
+		NodeList nl = generateRequest("getListePays")
+				.build()
+				.getInnerBody();
+		
+		Collection<Country> countries = new LinkedList<>();
+		
+		for(Node n : seekNodes(nl, "return"))
+		{
+			try
+			{
+				countries.add(castNodeToCountry(n));
+			}
+			catch(ServiceException ex)
+			{
+				// Not a well formated Country
+			}
+		}
+		
+		return countries;
 	}
 	public Country getCountryInfo(String countryName) throws UnsupportedOperationException, SOAPException, ServiceException
 	{
-		Document country = parseXML(generateRequest("donneInfoPays")
+		NodeList nl = generateRequest("donneInfoPays")
 				.addHeader("pays", countryName)
 				.build()
-				.getInnerBodyString());
-		
-		NodeList errors = country.getElementsByTagName("error");
-		
-		if(errors.getLength() > 0)
-		{ // manage errors
-			throw new ServiceException(errors.item(0));
-		}
-		else
+				.getInnerBody();
+
+		try
 		{
-			String name = country.getElementsByTagName("name").item(0).getTextContent();
-			String capital = country.getElementsByTagName("capital").item(0).getTextContent();
-			String nbinhab = country.getElementsByTagName("nbinhab").item(0).getTextContent();
+			Node resultNode = seekNode(nl, "return");
 			
-			return new Country(name, capital, (int)Double.parseDouble(nbinhab));
+			try
+			{
+				return castNodeToCountry(resultNode);
+			}
+			catch(ServiceException ex)
+			{
+				// Not a well formated Country
+				throw new ServiceException("Can't parse the result. Please, check the version of the software.");
+			}
+		}
+		catch(ServiceException ex)
+		{
+			// Result node not found
+			throw new ServiceException("No result returned by the Service.");
 		}
 	}
 }

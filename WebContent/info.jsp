@@ -17,17 +17,7 @@
 	
 		<div class="body">
 			<div class="menu">
-				<div class="selector">
-					<form action="Controler" method="GET">
-						<input type="hidden" name="action" value="info"></input>
-						<select name="country">
-							<c:forEach items="${countries}" var="country">
-								<option value="${country}">${country}</option>
-							</c:forEach>
-						</select>
-						<button type="submit">Go!</button>
-					</form>
-				</div>
+				<%@include file="selector.jsp" %>
 			
 				<div class="data">
 					<div>Country : ${country.name}</div>

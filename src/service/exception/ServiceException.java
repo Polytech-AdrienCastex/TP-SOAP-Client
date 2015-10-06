@@ -10,4 +10,12 @@ public class ServiceException extends Exception
 	{
 		super(xmlNode.getTextContent());
 	}
+	public ServiceException(String message)
+	{
+		super(message);
+	}
+	public ServiceException()
+	{
+		super();
+	}
 }

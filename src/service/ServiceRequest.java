@@ -108,8 +108,6 @@ public class ServiceRequest
 	public NodeList getInnerBody() throws SOAPException
 	{
         return ((Node)getBody().getChildElements().next())
-        		.getFirstChild()
-        		.getFirstChild()
         		.getChildNodes();
 	}
 	public String getInnerBodyString() throws SOAPException
@@ -117,7 +115,13 @@ public class ServiceRequest
         return ((Node)getBody().getChildElements().next())
         		.getFirstChild()
         		.getFirstChild()
-        		.getNodeValue();
+        		//.getNodeValue();
+        		.getChildNodes().getLength()+"+";
+	}
+	
+	public String getFirstObject() throws SOAPException
+	{
+		return toSOAP().getSOAPBody().getFirstChild().getFirstChild().getAttributes().item(1).getNodeValue();
 	}
 	
 	@Override
